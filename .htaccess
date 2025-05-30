@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Restricted Access"
+AuthUserFile /home/ebytransfer/public_html/reporting.eby-transfer.com/askew-csv/.htpasswd
+Require valid-user
