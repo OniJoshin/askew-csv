@@ -149,10 +149,23 @@
                 console.error(err);
             });
         function parseUKDateTime(str) {
-            const match = str.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
-            if (!match) return null;
-            const [_, day, month, year] = match;
-            return `${year}-${month}-${day}`; // ISO-like
+            if (!str || typeof str !== 'string') return null;
+
+            // Try UK format: DD/MM/YYYY
+            let match = str.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+            if (match) {
+                const [_, day, month, year] = match;
+                return `${year}-${month}-${day}`;
+            }
+
+            // Try ISO format: YYYY-MM-DD
+            match = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (match) {
+                const [_, year, month, day] = match;
+                return `${year}-${month}-${day}`;
+            }
+
+            return null; // no match
         }
 
 
