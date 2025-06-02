@@ -18,3 +18,5 @@ yarn-debug.log*
 yarn-error.log*
 .htpasswd
 .htaccess
+uploads/*.csv
+data/*.json
