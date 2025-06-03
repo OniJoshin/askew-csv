@@ -8,13 +8,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $leadsPath = $uploadDir . 'leads.csv';
     $emailsAskewsPath = $uploadDir . 'emails_askews.csv';
     $emailsDebtPath = $uploadDir . 'emails_debtclaims.csv';
+    $closedLostPath = $uploadDir . 'closed_lost.csv';
 
     move_uploaded_file($_FILES['leads']['tmp_name'], $leadsPath);
     move_uploaded_file($_FILES['emails_askews']['tmp_name'], $emailsAskewsPath);
-    move_uploaded_file($_FILES['emails_debtclaims']['tmp_name'], $emailsDebtPath);
+    move_uploaded_file($_FILES['closed_lost']['tmp_name'], $closedLostPath);
 
     function parseCsv($path) {
-        $rows = array_map('str_getcsv', file($path));
+        $rows = array_map(function($line) {
+            return str_getcsv($line, ",", '"', "\\");
+        }, file($path));
+
         $header = array_map('trim', $rows[0]);
 
         // Remove BOM if present
@@ -53,6 +57,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'leads' => parseCsv($leadsPath),
         'emails_askews' => $emailAskews,
         'emails_debtclaims' => $emailDebt,
+        'closed_lost' => (function () use ($closedLostPath) {
+            $rows = parseCsv($closedLostPath);
+
+            $fixedOptions = [
+                "The cost of our services",
+                "The range of services we offer",
+                "The promptness and quality of our communication",
+                "Testimonials and references from other clients"
+            ];
+
+            $counts = array_fill_keys($fixedOptions, 0);
+
+            foreach ($rows as $row) {
+                $feedback = trim($row['Closed Lost - Prospect feedback'] ?? '');
+                if (isset($counts[$feedback])) {
+                    $counts[$feedback]++;
+                }
+            }
+
+            return $counts;
+        })(),
     ];
 
     foreach ($parsedData['leads'] as &$lead) {
@@ -62,6 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     unset($lead); // break reference
+
+
 
 
     $leadsData = $parsedData['leads'];

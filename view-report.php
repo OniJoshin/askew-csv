@@ -124,9 +124,16 @@
 
         <p><br clear="all" style="page-break-before: always;"/></p>
         <h2>Closed Lost - Prospect's Feedback</h2>
+        <h3>Current Month</h3>
         <ul id="feedbackList"></ul>
         <div class="chart-container">
             <canvas id="feedbackChart"></canvas>
+        </div>
+
+        <h3>Previous 12 Months</h3>
+        <ul id="feedbackList12"></ul>
+        <div class="chart-container">
+            <canvas id="feedbackChart12"></canvas>
         </div>
     </div>
 
@@ -183,7 +190,9 @@
 
             const feedbackCounts = {};
             fixedFeedbackOptions.forEach(option => feedbackCounts[option] = 0);
-
+            
+            const feedbackCounts12 = {};
+            fixedFeedbackOptions.forEach(option => feedbackCounts12[option] = 0);
 
             const sourceCounts = {};
 
@@ -437,16 +446,39 @@
                 plugins: [ChartDataLabels]
             });
 
+            //foreach 
+            // const feedback = row['Closed Lost - Prospect feedback']?.trim();
+                /* if (feedback) {
+                    feedbackCounts[feedback] = (feedbackCounts[feedback] || 0) + 1;
+                } */
+
+            // --- Feedback Chart for 12 Months ---
+
+            const feedback12Months = data.closed_lost || {};
+            Object.entries(feedback12Months).forEach(([feedback, count]) => {
+                if (fixedFeedbackOptions.includes(feedback)) {
+                    feedbackCounts12[feedback] = count;
+                }
+            });
+
             // --- Feedback Chart ---
             const feedbackLabels = Object.keys(feedbackCounts);
+
             const feedbackData = Object.values(feedbackCounts);
+            const feedbackData12 = Object.values(feedbackCounts12);
+
             const feedbackMax = Math.max(...feedbackData);
+            const feedbackMax12 = Math.max(...feedbackData12);
 
             const feedbackList = document.getElementById('feedbackList');
+            const feedbackList12 = document.getElementById('feedbackList12');
+
             feedbackList.innerHTML = '';
+            feedbackList12.innerHTML = '';
 
             feedbackLabels.forEach(label => {
                 const li = document.createElement('li');
+                const li12 = document.createElement('li');
                 let shortLabel = '';
 
                 // Optionally simplify label for list display
@@ -468,7 +500,9 @@
                 }
 
                 li.textContent = `${shortLabel}: ${feedbackCounts[label]}`;
+                li12.textContent = `${shortLabel}: ${feedbackCounts12[label]}`;
                 feedbackList.appendChild(li);
+                feedbackList12.appendChild(li12);
             });
 
             new Chart(document.getElementById('feedbackChart').getContext('2d'), {
@@ -504,6 +538,44 @@
                         y: {
                             beginAtZero: true,
                             suggestedMax: feedbackMax + 1
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+            new Chart(document.getElementById('feedbackChart12').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: feedbackLabels,
+                    datasets: [{
+                        label: 'Feedback Count',
+                        data: feedbackData12,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    layout: {
+                        padding: { top: 20 }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'start',
+                            offset: -20,
+                            color: '#000',
+                            font: { weight: 'bold', size: 14 }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { autoSkip: false },
+                            title: { display: false }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: feedbackMax12 + 1
                         }
                     }
                 },

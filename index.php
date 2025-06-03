@@ -44,6 +44,11 @@
             <input type="file" class="form-control" name="emails_debtclaims" id="emails_debtclaims" accept=".csv" required>
         </div>
 
+        <div class="mb-3">
+            <label for="closed_lost" class="form-label">Closed Lost CSV</label>
+            <input type="file" class="form-control" name="closed_lost" id="closed_lost" accept=".csv" required>
+        </div>
+
         <div class="d-grid">
             <button type="submit" class="btn btn-primary">Generate Report</button>
         </div>
