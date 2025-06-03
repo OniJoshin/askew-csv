@@ -31,12 +31,12 @@
 
         <h2>Leads Overview</h2>
         <ul>
-            <li>Customers: <span id="customer">171</span></li>
-            <li>Qualified Leads: <span id="qualified">17</span></li>
-            <li>Contact with Opportunity: <span id="contactWithOpp">23</span></li>
-            <li>Contacts: <span id="contact">41</span></li>
-            <li>Open Leads: <span id="open">66</span></li>
-            <li>Unqualified/Closed Leads: <span id="unqualified">207</span></li>
+            <li>Customers: <span id="customer">0</span></li>
+            <li>Qualified Leads: <span id="qualified">0</span></li>
+            <li>Contact with Opportunity: <span id="contactWithOpp">0</span></li>
+            <li>Contacts: <span id="contact">0</span></li>
+            <li>Open Leads: <span id="open">0</span></li>
+            <li>Unqualified/Closed Leads: <span id="unqualified">0</span></li>
         </ul>
         <p>
             *Qualified leads = quotes have been sent to these leads<br>
