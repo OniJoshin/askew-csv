@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     move_uploaded_file($_FILES['leads']['tmp_name'], $leadsPath);
     move_uploaded_file($_FILES['emails_askews']['tmp_name'], $emailsAskewsPath);
+    move_uploaded_file($_FILES['emails_debtclaims']['tmp_name'], $emailsDebtPath);
     move_uploaded_file($_FILES['closed_lost']['tmp_name'], $closedLostPath);
 
     function parseCsv($path) {
